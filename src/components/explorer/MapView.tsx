@@ -12,20 +12,31 @@ type Props = {
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
-    carto: {
+    base: {
       type: "raster" as const,
       tiles: [
-        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+        "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
       ],
       tileSize: 256,
-      attribution: "© OpenStreetMap contributors © CARTO",
+      attribution: "Esri, HERE, Garmin, © OpenStreetMap contributors",
+    },
+    labels: {
+      type: "raster" as const,
+      tiles: [
+        "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+      ],
+      tileSize: 256,
     },
   },
   layers: [
     { id: "bg", type: "background" as const, paint: { "background-color": "#20242b" } },
-    { id: "carto", type: "raster" as const, source: "carto", paint: { "raster-saturation": -0.4 } },
+    {
+      id: "base",
+      type: "raster" as const,
+      source: "base",
+      paint: { "raster-saturation": -0.3, "raster-contrast": 0.05 },
+    },
+    { id: "labels", type: "raster" as const, source: "labels", paint: { "raster-opacity": 0.85 } },
   ],
 };
 
