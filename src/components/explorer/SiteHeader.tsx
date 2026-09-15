@@ -3,7 +3,7 @@ import { Map as MapIcon, NotebookPen } from "lucide-react";
 
 export function SiteHeader({ savedCount, onOpenPlan }: { savedCount: number; onOpenPlan?: () => void }) {
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4">
+    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-3 sm:px-4">
       <div className="flex items-baseline gap-3">
         <Link to="/" className="whitespace-nowrap text-base leading-none tracking-tight sm:text-lg">
           Kyoto Quiet Grid
@@ -12,14 +12,14 @@ export function SiteHeader({ savedCount, onOpenPlan }: { savedCount: number; onO
           Machiya cafes · secret courtyards
         </span>
       </div>
-      <nav className="flex items-center gap-2">
+      <nav className="flex items-center gap-1.5 sm:gap-2">
         <Link
           to="/"
           className="flex items-center gap-1.5 border border-border px-2.5 py-1.5 text-[11px] uppercase tracking-[0.14em] hover:border-foreground"
           activeOptions={{ exact: true }}
           activeProps={{ className: "border-foreground" }}
         >
-          <MapIcon className="h-3.5 w-3.5" /> Explore
+          <MapIcon className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Explore</span>
         </Link>
         <Link
           to="/about"
@@ -33,7 +33,8 @@ export function SiteHeader({ savedCount, onOpenPlan }: { savedCount: number; onO
             onClick={onOpenPlan}
             className="flex items-center gap-1.5 border border-primary bg-primary px-2.5 py-1.5 text-[11px] uppercase tracking-[0.14em] text-primary-foreground"
           >
-            <NotebookPen className="h-3.5 w-3.5" /> Day plan ({savedCount})
+            <NotebookPen className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Day plan</span> ({savedCount})
           </button>
         )}
       </nav>
