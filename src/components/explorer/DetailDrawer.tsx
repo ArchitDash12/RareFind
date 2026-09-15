@@ -18,11 +18,23 @@ export function DetailDrawer({ spot, saved, onSave, onClose }: Props) {
   const image = spot.gallery[Math.min(index, spot.gallery.length - 1)];
 
   const copyAddress = async () => {
+    const text = spot.address;
     try {
-      await navigator.clipboard.writeText(spot.address);
-      toast.success("Address copied", { description: spot.address });
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+      toast.success("Address copied", { description: text });
     } catch {
-      toast.error("Could not copy the address");
+      toast.error("Could not copy the address", { description: text });
     }
   };
 
