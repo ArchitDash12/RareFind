@@ -87,10 +87,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=JetBrains+Mono:ital,wght@0,300..700;1,300..600&display=swap",
       },
+      { rel: "stylesheet", href: "https://unpkg.com/maplibre-gl@6.9.0/dist/maplibre-gl.css" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
