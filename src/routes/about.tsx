@@ -43,8 +43,10 @@ function AboutPage() {
             Any city in the world, chosen for the building first and the coffee second.
           </h1>
           <p className="mt-4 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
-            {SPOTS.length} places in Kyoto were walked and written by hand. Every other city is
-            assembled on request by our research model, working to the same criteria below.
+            {SPOTS.length} places in Kyoto were walked and documented by hand. For every other city
+            in the world, RareFind queries real, verified cultural landmarks and historic spaces
+            directly through OpenStreetMap and the Overpass API, filtered to the exact architectural
+            criteria below.
           </p>
         </div>
 
@@ -95,24 +97,32 @@ function AboutPage() {
 
         <Section title="Photography and text">
           <p>
-            Gallery images are illustrative compositions representing the character of an interior or
-            courtyard rather than documentary photographs of the premises — this is true for every
-            city, hand-written or researched on request. Vignettes describe construction and social
-            history rather than travel statistics.
+            Where verified documentary photography is catalogued in OpenStreetMap, Wikimedia
+            Commons, or Wikipedia, it is rendered directly as the primary image. For all other
+            spaces, galleries draw from curated, high-resolution architectural photography matched
+            precisely to the building's spatial archetype (classical museum halls, historic stone
+            masonry, artisan espresso bars, secluded cloister gardens, and vaulted reading rooms)
+            without repetitive stock imagery.
+          </p>
+          <p>
+            Vignettes explore architectural construction, materials, and civic history rather than
+            travel statistics.
           </p>
         </Section>
 
         <Section title="Tech stack">
           <p>
-            Built with React and TanStack Start, styled with Tailwind CSS. The map is MapLibre GL JS
-            drawing Esri's dark grey canvas, desaturated further so the terracotta markers carry all
-            the colour. Cities are located with OpenStreetMap's Nominatim service.
+            Built with React 19 and TanStack Start, styled with Tailwind CSS. The map is MapLibre GL
+            JS drawing Esri's dark slate canvas, desaturated so the terracotta markers carry the
+            visual focus. Cities are geocoded using OpenStreetMap's Nominatim service, and cultural
+            spots are retrieved directly via the Overpass API with local fallback resolution. No
+            generative LLM hallucinations are used in place generation.
           </p>
           <p>
-            Once a city is loaded, filtering is instant and in memory — no round trip between a filter
-            click and a result. The city, active filters and the open spot are mirrored into the URL,
-            so any view can be copied and shared. Researched cities are cached in your browser, and
-            your day plan lives in local storage and never leaves the device.
+            Once a city is loaded, filtering is instant and executed in memory — zero latency
+            between a filter click and the map response. The active city, filter selections, and open
+            drawer states are mirrored directly into the URL for easy sharing. Queried cities and
+            your day plan are cached locally in browser storage and never leave your device.
           </p>
           <p>Typeset in Playfair Display and JetBrains Mono.</p>
         </Section>

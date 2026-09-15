@@ -4,6 +4,7 @@ import { Bookmark, BookmarkCheck, Copy, ExternalLink, X } from "lucide-react";
 import type { Spot } from "@/data/spots";
 import { FACET_LABELS } from "@/data/spots";
 import { cn } from "@/lib/utils";
+import { FALLBACK_PHOTO } from "@/lib/photos";
 
 type Props = {
   spot: Spot | null;
@@ -70,11 +71,17 @@ export function DetailDrawer({ spot, saved, onSave, onClose }: Props) {
 
         <div className="flex-1 overflow-y-auto">
           <img
-            src={image}
+            src={image || FALLBACK_PHOTO}
             alt={`${spot.name}, ${spot.district}`}
             width={1280}
             height={864}
-            className="aspect-[3/2] w-full border-b border-border object-cover"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== FALLBACK_PHOTO) {
+                target.src = FALLBACK_PHOTO;
+              }
+            }}
+            className="aspect-[3/2] w-full border-b border-border bg-muted object-cover"
           />
           <div className="flex gap-2 border-b border-border px-5 py-3">
             {spot.gallery.map((g, i) => (
@@ -87,7 +94,18 @@ export function DetailDrawer({ spot, saved, onSave, onClose }: Props) {
                   i === index && "border-primary ring-1 ring-primary",
                 )}
               >
-                <img src={g} alt="" loading="lazy" className="h-full w-full object-cover" />
+                <img
+                  src={g}
+                  alt=""
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== FALLBACK_PHOTO) {
+                      target.src = FALLBACK_PHOTO;
+                    }
+                  }}
+                  className="h-full w-full object-cover"
+                />
               </button>
             ))}
           </div>

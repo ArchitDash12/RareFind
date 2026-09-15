@@ -1,5 +1,6 @@
-import { GALLERY_POOL, type Spot } from "@/data/spots";
+import type { Spot } from "@/data/spots";
 import type { CityResult, GeneratedPlace } from "@/lib/places.functions";
+import { getCategoryGallery } from "@/lib/photos";
 
 export function citySlug(city: string) {
   return city
@@ -10,9 +11,11 @@ export function citySlug(city: string) {
 }
 
 function toSpot(place: GeneratedPlace, index: number, slug: string): Spot {
-  const start = index % GALLERY_POOL.length;
+  const spotId = `${slug}-${index}-${citySlug(place.name)}`;
+  const gallery = getCategoryGallery(place.type, spotId, place.realImage);
+
   return {
-    id: `${slug}-${index}-${citySlug(place.name)}`,
+    id: spotId,
     name: place.name,
     localName: place.localName,
     district: place.district,
@@ -20,7 +23,7 @@ function toSpot(place: GeneratedPlace, index: number, slug: string): Spot {
     coords: [place.lng, place.lat],
     address: place.address,
     hours: place.hours,
-    gallery: [0, 1, 2].map((n) => GALLERY_POOL[(start + n) % GALLERY_POOL.length]!),
+    gallery,
     crowd: place.crowd,
     minutes: Math.min(180, Math.max(15, Math.round(place.minutes))),
     wifi: place.wifi,
@@ -39,7 +42,7 @@ export function resultToSpots(result: CityResult): Spot[] {
   return result.places.map((p, i) => toSpot(p, i, slug));
 }
 
-const cacheKey = (city: string) => `rarefind-city-${citySlug(city)}-v1`;
+const cacheKey = (city: string) => `rarefind-city-v2-${citySlug(city)}`;
 
 export function readCityCache(city: string): Spot[] | null {
   if (typeof window === "undefined") return null;

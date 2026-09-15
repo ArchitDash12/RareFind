@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background Container -->
+  <rect width="64" height="64" rx="14" fill="#1C1B1A" />
+  
+  <!-- Outer Arch Border -->
+  <path d="M14 54V28C14 18.0589 22.0589 10 32 10C41.9411 10 50 18.0589 50 28V54" stroke="#C85A32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Architectural Keystone at Top -->
+  <path d="M29 10L30 6H34L35 10H29Z" fill="#C85A32" />
+  
+  <!-- Arch Capital Trim Line -->
+  <line x1="11" y1="28" x2="17" y2="28" stroke="#C85A32" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="47" y1="28" x2="53" y2="28" stroke="#C85A32" stroke-width="2.5" stroke-linecap="round" />
+  
+  <!-- Base Plinth -->
+  <line x1="10" y1="54" x2="54" y2="54" stroke="#C85A32" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- Inner Portal Arch -->
+  <path d="M19 54V30C19 22.8203 24.8203 17 32 17C39.1797 17 45 22.8203 45 30V54" stroke="#FAF8F5" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Compass Ring -->
+  <circle cx="32" cy="34" r="8" stroke="#C85A32" stroke-width="1.2" stroke-dasharray="2 2" />
+
+  <!-- 4-Point Discovery Star / Compass -->
+  <!-- Vertical Points -->
+  <polygon points="32,22 34,32 32,34 30,32" fill="#FAF8F5" />
+  <polygon points="32,46 34,36 32,34 30,36" fill="#FAF8F5" />
+  <!-- Horizontal Points -->
+  <polygon points="20,34 30,32 32,34 30,36" fill="#FAF8F5" />
+  <polygon points="44,34 34,32 32,34 34,36" fill="#FAF8F5" />
+
+  <!-- Terracotta Star Facets -->
+  <polygon points="32,22 32,34 34,32" fill="#C85A32" />
+  <polygon points="32,46 32,34 30,36" fill="#C85A32" />
+  <polygon points="20,34 32,34 30,32" fill="#C85A32" />
+  <polygon points="44,34 32,34 34,36" fill="#C85A32" />
+
+  <!-- Central Star Hub -->
+  <circle cx="32" cy="34" r="1.5" fill="#FAF8F5" />
+</svg>

@@ -1,53 +1,143 @@
-# Kyoto's Hidden Paths
+# RareFind
 
-Build a Local & Cultural Explorer web app anchored to an opinionated, niche premise: "Hidden Architectural Gems, Machiya Cafes & Secret Courtyards of Kyoto" (with rich curated spots, vibes, and search).
+> **Hidden architectural gems, quiet cafes & secret courtyards — anywhere in the world.**  
+> Chosen for the building first, and the coffee second.
 
-Key features and requirements:
-1. Split-View Explorer:
-   - Interactive map using MapLibre GL JS / Leaflet / Mapbox with a custom muted dark slate tile style (e.g. CartoDB Dark Matter / Alidade dark slate tiles so it works out-of-the-box, compatible with Mapbox GL JS if configured).
-   - Faceted filtering based on vibes: wifi speed, natural light, historical era, quietness/ambience, seating style, tea/coffee type.
-   - Synchronized bidirectional interaction: hovering or clicking a spot card highlights the corresponding map marker; clicking a map marker scrolls smoothly to and highlights the card.
+---
 
-2. Detail Drawer / Story Page:
-   - High-resolution photo gallery and crowd profile.
-   - 2-3 paragraph cultural vignette explaining why each spot matters culturally and architecturally (not generic travel stats).
-   - Practical utilities: "Copy Address" with toast feedback, directions link, and "Save to Day Plan".
+## Overview
 
-3. Itinerary Builder:
-   - Slide-out drawer or dedicated view showing saved spots compiled into an ordered sequence.
-   - Routine summary: estimated walking distance, estimated total time, and step-by-step visit order.
-   - Saved bookmarks/itineraries stored in localStorage so they persist across refreshes.
+**RareFind** is an opinionated cultural explorer and day-planning tool designed to discover atmospheric, historic, and architecturally significant spaces. Rather than prioritizing commercial popularity or queue-heavy tourist magnets, RareFind maps places where construction, light, and spatial heritage tell an authentic story of how a city was built and lived in.
 
-4. About & Method Page:
-   - Dedicated view detailing how the spots were curated, editorial criteria, and the tech stack.
+Kyoto's hand-documented machiyas, Lisbon's secluded courtyards, Roman cloisters, or Berlin's quiet Hinterhöfe — explore verified cultural spots on an interactive dark slate map, inspect rich architectural vignettes, filter by nuanced environmental qualities, and compile a walkable day plan.
 
-Extras & Layout:
-- Sync active filters and selected spot pins with URL search parameters (shareable links).
-- In-memory instant filtering from a typed local dataset (zero reload lag).
-- Responsive: classic split view on desktop; on mobile, collapses into a draggable bottom drawer over the map.
+---
 
-Design System:
-- Typography: Playfair Display / Newsreader for headings; JetBrains Mono for UI, badges, and body text. No Inter or Roboto.
-- Color palette: Warm parchment background (#F9F8F5), deep ink text (#1C1B1A), crisp hairline borders (#E5E3DD), single terracotta accent (#C85A32), muted dark slate map canvas.
-- Aesthetics: Sharp geometry, 1px solid borders, high contrast separation, no heavy drop shadows or glossy blur effects.
+## Key Features
 
-This project was built with [Lovable](https://lovable.dev).
+### 1. Dual-Engine OpenStreetMap & Overpass Integration
+- **Real, Verified Spots**: Replaced hallucinated AI place generation with direct, real-time queries against **OpenStreetMap (OSM)** and the **Overpass API**.
+- **Accurate Coordinates & Metadata**: Every searched city pulls real cultural landmarks (museums, historic monuments, independent kissatens/cafes, cloisters, quiet reading rooms) with exact geographic coordinates, street addresses, and opening hours.
+- **Resilient Fallback**: If public Overpass servers experience traffic or timeouts, an automated Nominatim POI resolution pipeline ensures search results are always delivered without interruption.
 
-## Build with Lovable
+### 2. Authentic Photography System
+- **Verified Documentary Photos**: Automatically resolves real Wikimedia Commons and Wikipedia images when landmarks possess catalogued media.
+- **Category-Matched Architectural Photography**: For spots without direct image tags, RareFind draws from curated collections of high-resolution architectural photography matched to spatial archetypes (*museum galleries*, *historic masonry*, *artisan espresso bars*, *walled gardens*, and *vaulted reading rooms*), eliminating repetitive stock photos.
+- **Fail-Safe Loading**: Built-in image error fallbacks prevent broken image icons across spot cards and drawers.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/eef2b5d3-e780-472c-8164-ba1fa32c678e).
+### 3. Split-View Interactive Map
+- **MapLibre GL JS**: Dark gray canvas styled with desaturated tiles and terracotta markers (`#C85A32`).
+- **Bidirectional Sync**: Hovering or clicking a spot card focuses and highlights the map marker; clicking a marker smoothly scrolls and expands the corresponding card.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+### 4. Vibe & Environmental Faceting
+Filter in real time with instant in-memory execution:
+- **Historical Era**: Pre-1800, 1800s, Early 1900s, Mid-century, Contemporary
+- **Natural Light**: Skylit, Dappled, Lantern-dim
+- **Quietness**: Library hush, Low murmur, Convivial
+- **Wifi Speed**: Fibre-fast, Workable, Trickle, None by choice
+- **Seating Style**: Floor seating, Counter stool, Timber table, Garden bench
+- **Drinks**: Hand-drip coffee, Espresso bar, Tea house, Natural wine & aperitivo, No drinks
 
-## Development
+### 5. Walkable Day Plan & Itinerary
+- Save spots to your personal day plan with one click.
+- Reorder stops, review estimated walking times, copy addresses with toast notifications, and retain your itinerary in local storage across browser sessions.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+---
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+## Tech Stack
+
+- **Framework**: [React 19](https://react.dev/) + [TanStack Start](https://tanstack.com/start)
+- **Routing & State**: [TanStack Router](https://tanstack.com/router) & [TanStack Query](https://tanstack.com/query)
+- **Mapping**: [MapLibre GL JS](https://maplibre.org/)
+- **Geodata & Places**: [OpenStreetMap](https://www.openstreetmap.org/) via [Overpass API](https://overpass-api.de/) & [Nominatim](https://nominatim.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Notifications**: [Sonner](https://sonner.emilkowal.ski/)
+- **Bundler**: [Vite 8](https://vitejs.dev/) + [Nitro](https://nitro.unjs.io/)
+
+---
+
+## Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (version 18.x or higher recommended)
+- `npm` or `bun`
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ArchitDash12/RareFind.git
+   cd RareFind
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running Locally
+
+Start the Vite development server:
+```bash
 npm run dev
 ```
+
+Open your browser and navigate to **`http://localhost:8080`**.
+
+### Building for Production
+
+Compile the TypeScript bundle and generate production assets:
+```bash
+npm run build
+```
+
+Preview the production build locally:
+```bash
+npm run preview
+```
+
+Type check the codebase:
+```bash
+npx tsc --noEmit
+```
+
+---
+
+## Project Structure
+
+```
+RareFind/
+├── public/
+│   ├── favicon.svg          # Vector SVG architectural emblem
+│   ├── favicon.ico          # Binary favicon icon
+│   ├── apple-touch-icon.png # High-res touch icon
+│   └── logo.jpg             # Full brand logo asset
+├── src/
+│   ├── assets/              # Curated static imagery
+│   ├── components/
+│   │   ├── explorer/        # SpotCard, MapView, DetailDrawer, Itinerary, Header
+│   │   └── ui/              # Radix & Sonner UI primitives
+│   ├── data/
+│   │   └── spots.ts         # Hand-documented Kyoto dataset and facet definitions
+│   ├── lib/
+│   │   ├── city.ts          # Cache management and spot transformation
+│   │   ├── error-reporting.ts # Clean runtime logger
+│   │   ├── itinerary.ts     # Day plan state and persistence
+│   │   ├── photos.ts        # Category-matched architectural photography service
+│   │   └── places.functions.ts # Overpass API + Nominatim OSM search engine
+│   ├── routes/
+│   │   ├── __root.tsx       # Root layout, meta tags, and font imports
+│   │   ├── about.tsx        # Method, criteria, and fieldwork principles
+│   │   └── index.tsx        # Split-view explorer application
+│   ├── styles.css           # Design tokens and custom styles
+│   └── routeTree.gen.ts     # Generated TanStack route tree
+├── tsconfig.json
+└── vite.config.ts
+```
+
+---
+
+## License
+
+Created for architectural discovery. Distributed under the MIT License.

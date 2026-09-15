@@ -1,6 +1,7 @@
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import type { Spot } from "@/data/spots";
 import { cn } from "@/lib/utils";
+import { FALLBACK_PHOTO } from "@/lib/photos";
 
 type Props = {
   spot: Spot;
@@ -27,12 +28,18 @@ export function SpotCard({ spot, selected, hovered, saved, onHover, onOpen, onSa
     >
       <div className="flex gap-3">
         <img
-          src={spot.gallery[0]}
-          alt={`${spot.name} in ${spot.district}, Kyoto`}
+          src={spot.gallery[0] || FALLBACK_PHOTO}
+          alt={`${spot.name} in ${spot.district}`}
           loading="lazy"
           width={1280}
           height={864}
-          className="h-20 w-24 shrink-0 border border-border object-cover"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (target.src !== FALLBACK_PHOTO) {
+              target.src = FALLBACK_PHOTO;
+            }
+          }}
+          className="h-20 w-24 shrink-0 border border-border bg-muted object-cover"
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">

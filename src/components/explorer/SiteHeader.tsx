@@ -1,12 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { Map as MapIcon, NotebookPen } from "lucide-react";
+import { RareFindLogo } from "@/components/explorer/RareFindLogo";
 
 export function SiteHeader({ savedCount, onOpenPlan }: { savedCount: number; onOpenPlan?: () => void }) {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-3 sm:px-4">
-      <div className="flex items-baseline gap-3">
-        <Link to="/" className="whitespace-nowrap text-base leading-none tracking-tight sm:text-lg">
-          RareFind
+      <div className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-2.5 whitespace-nowrap text-base leading-none tracking-tight sm:text-lg">
+          <RareFindLogo size={22} />
+          <span>RareFind</span>
         </Link>
         <span className="hidden text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:inline">
           Hidden rooms · secret courtyards · anywhere
