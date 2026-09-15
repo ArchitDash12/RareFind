@@ -5,16 +5,16 @@ import { SPOTS } from "@/data/spots";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "Method & Criteria — Kyoto Quiet Grid" },
+      { title: "Method & Criteria — RareFind" },
       {
         name: "description",
         content:
-          "How the Kyoto Quiet Grid spots were curated: editorial criteria, fieldwork rules, vibe definitions and the tech behind the map.",
+          "How RareFind picks its spots: editorial criteria, fieldwork rules, vibe definitions and the tech behind the map.",
       },
-      { property: "og:title", content: "Method & Criteria — Kyoto Quiet Grid" },
+      { property: "og:title", content: "Method & Criteria — RareFind" },
       {
         property: "og:description",
-        content: "Editorial criteria, fieldwork rules and the tech stack behind the Kyoto Quiet Grid.",
+        content: "Editorial criteria, fieldwork rules and the tech stack behind RareFind.",
       },
     ],
   }),
@@ -40,16 +40,20 @@ function AboutPage() {
         <div className="border-b border-border px-6 py-10 md:px-10">
           <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Method</p>
           <h1 className="mt-2 max-w-3xl text-3xl leading-tight md:text-5xl">
-            {SPOTS.length} places, chosen for the building first and the coffee second.
+            Any city in the world, chosen for the building first and the coffee second.
           </h1>
+          <p className="mt-4 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
+            {SPOTS.length} places in Kyoto were walked and written by hand. Every other city is
+            assembled on request by our research model, working to the same criteria below.
+          </p>
         </div>
 
         <Section title="What qualifies">
           <p>
-            A spot enters the grid only if its architecture tells you something about how Kyoto was
-            built and lived in — a machiya's tōriniwa, a tsubo-niwa's stack ventilation, a kura wrapped
-            rather than demolished. A pleasant cafe in a generic building does not qualify, however
-            good the pour-over is.
+            A spot enters the grid only if its architecture tells you something about how its city was
+            built and lived in — a Kyoto machiya's tōriniwa, a Lisbon pátio, a Berlin Hinterhof, a
+            Mexico City vecindad. A pleasant cafe in a generic building does not qualify, however good
+            the pour-over is.
           </p>
           <p>
             Every entry must also be somewhere you can actually sit, stand or walk through without a
@@ -91,24 +95,24 @@ function AboutPage() {
 
         <Section title="Photography and text">
           <p>
-            Gallery images are illustrative compositions representing the character of each interior
-            and courtyard rather than documentary photographs of the premises. Vignettes are written
-            in-house, one place at a time, and describe construction and social history rather than
-            travel statistics.
+            Gallery images are illustrative compositions representing the character of an interior or
+            courtyard rather than documentary photographs of the premises — this is true for every
+            city, hand-written or researched on request. Vignettes describe construction and social
+            history rather than travel statistics.
           </p>
         </Section>
 
         <Section title="Tech stack">
           <p>
             Built with React and TanStack Start, styled with Tailwind CSS. The map is MapLibre GL JS
-            drawing CARTO Dark Matter raster tiles over OpenStreetMap data, desaturated to a muted
-            slate canvas so the terracotta markers carry all the colour.
+            drawing Esri's dark grey canvas, desaturated further so the terracotta markers carry all
+            the colour. Cities are located with OpenStreetMap's Nominatim service.
           </p>
           <p>
-            The dataset is a typed local file, so filtering is instant and in memory — no network
-            round trip between a filter click and a result. Active filters and the open spot are
-            mirrored into the URL query string, so any view can be copied and shared. Your day plan
-            lives in your browser's local storage and never leaves the device.
+            Once a city is loaded, filtering is instant and in memory — no round trip between a filter
+            click and a result. The city, active filters and the open spot are mirrored into the URL,
+            so any view can be copied and shared. Researched cities are cached in your browser, and
+            your day plan lives in local storage and never leaves the device.
           </p>
           <p>Typeset in Playfair Display and JetBrains Mono.</p>
         </Section>

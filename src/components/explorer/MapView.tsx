@@ -3,6 +3,7 @@ import type { Spot } from "@/data/spots";
 
 type Props = {
   spots: Spot[];
+  center: [number, number];
   selectedId: string | null;
   hoveredId: string | null;
   onSelect: (id: string) => void;
@@ -40,13 +41,23 @@ const MAP_STYLE = {
   ],
 };
 
-export default function MapView({ spots, selectedId, hoveredId, onSelect, onHover }: Props) {
+export default function MapView({ spots, center, selectedId, hoveredId, onSelect, onHover }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Record<string, { marker: any; el: HTMLElement }>>({});
   const readyRef = useRef(false);
   const handlers = useRef({ onSelect, onHover });
   handlers.current = { onSelect, onHover };
+  const centerRef = useRef(center);
+  centerRef.current = center;
+
+  // recentre when the city changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.easeTo({ center, zoom: 12.1, duration: 900 });
+  }, [center[0], center[1]]);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -56,7 +67,7 @@ export default function MapView({ spots, selectedId, hoveredId, onSelect, onHove
       const map = new maplibregl.Map({
         container: containerRef.current,
         style: MAP_STYLE as any,
-        center: [135.7595, 35.0116],
+        center: centerRef.current,
         zoom: 12.1,
         attributionControl: { compact: true },
       });

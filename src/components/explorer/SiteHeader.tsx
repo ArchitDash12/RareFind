@@ -6,10 +6,10 @@ export function SiteHeader({ savedCount, onOpenPlan }: { savedCount: number; onO
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-3 sm:px-4">
       <div className="flex items-baseline gap-3">
         <Link to="/" className="whitespace-nowrap text-base leading-none tracking-tight sm:text-lg">
-          Kyoto Quiet Grid
+          RareFind
         </Link>
         <span className="hidden text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:inline">
-          Machiya cafes · secret courtyards
+          Hidden rooms · secret courtyards · anywhere
         </span>
       </div>
       <nav className="flex items-center gap-1.5 sm:gap-2">

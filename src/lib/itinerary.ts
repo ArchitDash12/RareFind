@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { SPOTS, type Spot } from "@/data/spots";
+import { type Spot } from "@/data/spots";
 
 const KEY = "kyoto-day-plan-v1";
 
@@ -14,7 +14,7 @@ function read(): string[] {
   }
 }
 
-export function useItinerary() {
+export function useItinerary(pool: Spot[] = []) {
   const [ids, setIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export function useItinerary() {
     [ids, persist],
   );
 
-  const spots = ids.map((id) => SPOTS.find((s) => s.id === id)).filter(Boolean) as Spot[];
+  const spots = ids.map((id) => pool.find((s) => s.id === id)).filter(Boolean) as Spot[];
 
   return { ids, spots, toggle, remove, clear, move, has: (id: string) => ids.includes(id) };
 }

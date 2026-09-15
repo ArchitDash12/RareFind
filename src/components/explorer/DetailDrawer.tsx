@@ -57,7 +57,7 @@ export function DetailDrawer({ spot, saved, onSave, onClose }: Props) {
               {spot.district} · {spot.type}
             </p>
             <h2 className="mt-1 text-2xl leading-tight">{spot.name}</h2>
-            <p className="text-sm text-muted-foreground">{spot.kanji}</p>
+            <p className="text-sm text-muted-foreground">{spot.localName}</p>
           </div>
           <button
             onClick={onClose}
