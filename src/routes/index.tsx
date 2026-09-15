@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/explorer/SiteHeader";
@@ -52,7 +52,6 @@ function Explorer() {
   const [planOpen, setPlanOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [sheet, setSheet] = useState(45);
-  const listRef = useRef<HTMLDivElement | null>(null);
   const itinerary = useItinerary();
 
   useEffect(() => setMounted(true), []);
@@ -112,8 +111,10 @@ function Explorer() {
   // marker click -> scroll the matching card into view
   useEffect(() => {
     if (!selectedId) return;
-    const node = listRef.current?.querySelector(`[data-spot-id="${selectedId}"]`);
-    node?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>(`[data-spot-id="${selectedId}"]`),
+    ).filter((n) => n.offsetParent !== null);
+    nodes[0]?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [selectedId]);
 
   const handleSave = (id: string) => {
@@ -150,7 +151,7 @@ function Explorer() {
         />
       </div>
       <FilterPanel filters={filters} onToggle={toggleFacet} onClear={clearFilters} count={results.length} />
-      <div ref={listRef} className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         {results.length === 0 && (
           <p className="px-4 py-10 text-center text-xs text-muted-foreground">
             No spots match those vibes. Loosen a filter.
