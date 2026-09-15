@@ -5,7 +5,7 @@ export function SiteHeader({ savedCount, onOpenPlan }: { savedCount: number; onO
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4">
       <div className="flex items-baseline gap-3">
-        <Link to="/" className="text-lg leading-none tracking-tight">
+        <Link to="/" className="whitespace-nowrap text-base leading-none tracking-tight sm:text-lg">
           Kyoto Quiet Grid
         </Link>
         <span className="hidden text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:inline">
