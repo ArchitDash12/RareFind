@@ -8,11 +8,21 @@ import spot6 from "@/assets/spot-6.jpg";
 export const FACETS = {
   wifi: ["Fibre-fast", "Workable", "Trickle", "None by choice"],
   light: ["Skylit", "Dappled", "Lantern-dim"],
-  era: ["Edo (pre-1868)", "Meiji-Taisho", "Showa", "Contemporary"],
+  era: ["Pre-1800", "1800s", "Early 1900s", "Mid-century", "Contemporary"],
   quiet: ["Library hush", "Low murmur", "Convivial"],
-  seating: ["Tatami floor", "Counter stool", "Timber table", "Garden bench"],
-  drink: ["Hand-drip coffee", "Matcha / usucha", "Hojicha & sencha", "Kissaten siphon"],
+  seating: ["Floor seating", "Counter stool", "Timber table", "Garden bench"],
+  drink: [
+    "Hand-drip coffee",
+    "Espresso bar",
+    "Tea house",
+    "Natural wine & aperitivo",
+    "No drinks",
+  ],
 } as const;
+
+export const GALLERY_POOL = [spot1, spot2, spot3, spot4, spot5, spot6];
+
+export const DEFAULT_CITY = "Kyoto, Japan";
 
 export type FacetKey = keyof typeof FACETS;
 export type FacetValue<K extends FacetKey> = (typeof FACETS)[K][number];
@@ -29,9 +39,9 @@ export const FACET_LABELS: Record<FacetKey, string> = {
 export type Spot = {
   id: string;
   name: string;
-  kanji: string;
+  localName: string;
   district: string;
-  type: "Machiya cafe" | "Secret courtyard" | "Architectural gem";
+  type: string;
   coords: [number, number];
   address: string;
   hours: string;
@@ -52,7 +62,7 @@ export const SPOTS: Spot[] = [
   {
     id: "kurasu-roji",
     name: "Roji no Kurasu",
-    kanji: "路地の蔵",
+    localName: "路地の蔵",
     district: "Nishijin",
     type: "Machiya cafe",
     coords: [135.7448, 35.0295],
@@ -63,7 +73,7 @@ export const SPOTS: Spot[] = [
     minutes: 60,
     wifi: "Fibre-fast",
     light: "Dappled",
-    era: "Meiji-Taisho",
+    era: "Early 1900s",
     quiet: "Library hush",
     seating: "Counter stool",
     drink: "Hand-drip coffee",
@@ -77,7 +87,7 @@ export const SPOTS: Spot[] = [
   {
     id: "tsuboniwa-hachi",
     name: "Tsubo-niwa Hachi",
-    kanji: "坪庭 八",
+    localName: "坪庭 八",
     district: "Shinmachi",
     type: "Secret courtyard",
     coords: [135.7554, 35.0042],
@@ -88,10 +98,10 @@ export const SPOTS: Spot[] = [
     minutes: 35,
     wifi: "None by choice",
     light: "Skylit",
-    era: "Edo (pre-1868)",
+    era: "Pre-1800",
     quiet: "Library hush",
     seating: "Garden bench",
-    drink: "Matcha / usucha",
+    drink: "Tea house",
     summary: "A four-tatami courtyard that exists purely to move air and light through a merchant house.",
     vignette: [
       "A tsubo-niwa is a courtyard of roughly one tsubo — 3.3 square metres. It is not decorative in origin. Sandwiched between a machiya's deep rooms, it acts as a chimney: sun warms the courtyard air, the air rises, and cooler air is drawn in from the street entrance across the whole house.",
@@ -102,7 +112,7 @@ export const SPOTS: Spot[] = [
   {
     id: "kissa-showa",
     name: "Kissa Hakuba",
-    kanji: "喫茶 白馬",
+    localName: "喫茶 白馬",
     district: "Kawaramachi",
     type: "Machiya cafe",
     coords: [135.7681, 35.0055],
@@ -113,10 +123,10 @@ export const SPOTS: Spot[] = [
     minutes: 75,
     wifi: "Trickle",
     light: "Lantern-dim",
-    era: "Showa",
+    era: "Mid-century",
     quiet: "Low murmur",
     seating: "Timber table",
-    drink: "Kissaten siphon",
+    drink: "Espresso bar",
     summary: "Post-war kissaten interior, untouched since 1968: velour booths, siphon bar, smoke-cured ceiling.",
     vignette: [
       "The Showa kissaten was Japan's answer to the reading room — a place to rent a chair and an hour. Hakuba's owner has refused every renovation quote since his father's death, and the result is a nearly intact 1968 interior: mustard velour, chrome trim, a Hario siphon bar operated with laboratory seriousness.",
@@ -127,7 +137,7 @@ export const SPOTS: Spot[] = [
   {
     id: "gion-kura",
     name: "Higashiyama Kura",
-    kanji: "東山蔵",
+    localName: "東山蔵",
     district: "Higashiyama",
     type: "Architectural gem",
     coords: [135.7784, 35.0004],
@@ -141,7 +151,7 @@ export const SPOTS: Spot[] = [
     era: "Contemporary",
     quiet: "Library hush",
     seating: "Garden bench",
-    drink: "Hojicha & sencha",
+    drink: "Tea house",
     summary: "A 1920s storehouse wrapped in board-formed concrete — the clearest old-meets-new lesson in the city.",
     vignette: [
       "The original kura survived the war, two typhoons, and a 1980s plan to demolish it for parking. The 2011 intervention keeps the storehouse intact and builds a concrete envelope around it, so you circulate between the two skins as if walking through an archaeological section.",
@@ -152,7 +162,7 @@ export const SPOTS: Spot[] = [
   {
     id: "arashiyama-hanare",
     name: "Hanare Saga",
-    kanji: "離れ 嵯峨",
+    localName: "離れ 嵯峨",
     district: "Arashiyama",
     type: "Machiya cafe",
     coords: [135.6702, 35.0165],
@@ -163,10 +173,10 @@ export const SPOTS: Spot[] = [
     minutes: 55,
     wifi: "Workable",
     light: "Dappled",
-    era: "Meiji-Taisho",
+    era: "Early 1900s",
     quiet: "Low murmur",
-    seating: "Tatami floor",
-    drink: "Matcha / usucha",
+    seating: "Floor seating",
+    drink: "Tea house",
     summary: "A detached tea annexe on a farmhouse plot, ten minutes' walk from the crowds and utterly unlike them.",
     vignette: [
       "Hanare means the detached building — the annexe a family built when the main house filled up. This one, from around 1912, was a tea room for a landowning farm family and sits at the far end of a persimmon garden.",
@@ -177,7 +187,7 @@ export const SPOTS: Spot[] = [
   {
     id: "teramachi-hikari",
     name: "Hikari Botan",
-    kanji: "光牡丹",
+    localName: "光牡丹",
     district: "Teramachi",
     type: "Machiya cafe",
     coords: [135.7663, 35.0114],
@@ -202,7 +212,7 @@ export const SPOTS: Spot[] = [
   {
     id: "fushimi-idoba",
     name: "Idoba Courtyard",
-    kanji: "井戸場",
+    localName: "井戸場",
     district: "Fushimi",
     type: "Secret courtyard",
     coords: [135.7617, 34.9327],
@@ -213,10 +223,10 @@ export const SPOTS: Spot[] = [
     minutes: 25,
     wifi: "None by choice",
     light: "Skylit",
-    era: "Edo (pre-1868)",
+    era: "Pre-1800",
     quiet: "Low murmur",
     seating: "Garden bench",
-    drink: "Hojicha & sencha",
+    drink: "Tea house",
     summary: "A shared well-yard between four sake-brewing households, still in daily communal use.",
     vignette: [
       "Fushimi's brewing district sits on soft groundwater, and before piped supply, blocks of houses shared a single well-yard. Idoba is one of the last still functioning, ringed by four households who maintain it in rotation.",
@@ -227,7 +237,7 @@ export const SPOTS: Spot[] = [
   {
     id: "kamigamo-en",
     name: "Kamigamo Shirokabe",
-    kanji: "上賀茂 白壁",
+    localName: "上賀茂 白壁",
     district: "Kamigamo",
     type: "Architectural gem",
     coords: [135.7529, 35.0596],
@@ -238,10 +248,10 @@ export const SPOTS: Spot[] = [
     minutes: 45,
     wifi: "Trickle",
     light: "Dappled",
-    era: "Edo (pre-1868)",
+    era: "Pre-1800",
     quiet: "Library hush",
-    seating: "Tatami floor",
-    drink: "Matcha / usucha",
+    seating: "Floor seating",
+    drink: "Tea house",
     summary: "A shake residence from the shrine-priest quarter, with its private canal still running under the floor.",
     vignette: [
       "The shake were hereditary shrine families, and their houses along the Myojin canal form Kyoto's most intact pre-modern residential street. Each plot draws water from the canal through a small sluice, uses it, and returns it downstream — a protocol enforced for centuries by neighbourly pressure rather than law.",
@@ -252,7 +262,7 @@ export const SPOTS: Spot[] = [
   {
     id: "nishiki-ura",
     name: "Ura-Nishiki Stand",
-    kanji: "裏錦",
+    localName: "裏錦",
     district: "Nishiki",
     type: "Machiya cafe",
     coords: [135.7639, 35.0051],
@@ -263,7 +273,7 @@ export const SPOTS: Spot[] = [
     minutes: 20,
     wifi: "Trickle",
     light: "Lantern-dim",
-    era: "Showa",
+    era: "Mid-century",
     quiet: "Convivial",
     seating: "Counter stool",
     drink: "Hand-drip coffee",
@@ -277,7 +287,7 @@ export const SPOTS: Spot[] = [
   {
     id: "okazaki-hiiro",
     name: "Hiiro Annex",
-    kanji: "緋色別館",
+    localName: "緋色別館",
     district: "Okazaki",
     type: "Architectural gem",
     coords: [135.7826, 35.0135],
@@ -291,7 +301,7 @@ export const SPOTS: Spot[] = [
     era: "Contemporary",
     quiet: "Low murmur",
     seating: "Timber table",
-    drink: "Hojicha & sencha",
+    drink: "Tea house",
     summary: "A 1930s civic annex reworked as a tea counter, keeping its terrazzo and its steel windows.",
     vignette: [
       "Okazaki was Kyoto's early-twentieth-century civic showpiece, and this annex served an exhibition hall that no longer exists. Its steel-framed windows and terrazzo floor are imperial-era municipal standard issue, now vanishingly rare.",

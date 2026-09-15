@@ -1,19 +1,29 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Loader2, MapPin, Search } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/explorer/SiteHeader";
 import { FilterPanel, EMPTY_FILTERS, type Filters } from "@/components/explorer/FilterPanel";
 import { SpotCard } from "@/components/explorer/SpotCard";
 import { DetailDrawer } from "@/components/explorer/DetailDrawer";
 import { ItineraryDrawer } from "@/components/explorer/ItineraryDrawer";
-import { FACETS, SPOTS, spotById, type FacetKey } from "@/data/spots";
+import { FACETS, SPOTS, DEFAULT_CITY, type FacetKey, type Spot } from "@/data/spots";
+import { getCitySpots } from "@/lib/places.functions";
+import { citySlug, readCityCache, readCityCenter, resultToSpots, writeCityCache } from "@/lib/city";
 import { useItinerary } from "@/lib/itinerary";
 import { cn } from "@/lib/utils";
 
 const MapView = lazy(() => import("@/components/explorer/MapView"));
 
-type ExplorerSearch = Partial<Record<FacetKey, string>> & { q?: string; spot?: string };
+const KYOTO_CENTER: [number, number] = [135.7595, 35.0116];
+
+type ExplorerSearch = Partial<Record<FacetKey, string>> & {
+  q?: string;
+  spot?: string;
+  city?: string;
+};
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): ExplorerSearch => {
@@ -24,21 +34,22 @@ export const Route = createFileRoute("/")({
     }
     if (typeof search["q"] === "string" && search["q"]) out.q = search["q"];
     if (typeof search["spot"] === "string" && search["spot"]) out.spot = search["spot"];
+    if (typeof search["city"] === "string" && search["city"]) out.city = search["city"];
     return out;
   },
   head: () => ({
     meta: [
-      { title: "Kyoto Quiet Grid — Hidden Machiya Cafes & Secret Courtyards" },
+      { title: "RareFind — Hidden Cafes, Courtyards & Architectural Gems" },
       {
         name: "description",
         content:
-          "A curated map of Kyoto's hidden architectural gems, machiya cafes and secret courtyards. Filter by light, quietness, era and brew, then build a walkable day plan.",
+          "Type any city and RareFind maps its hidden architectural gems, quiet cafes and secret courtyards. Filter by light, quietness and era, then build a walkable day plan.",
       },
-      { property: "og:title", content: "Kyoto Quiet Grid — Hidden Machiya Cafes & Secret Courtyards" },
+      { property: "og:title", content: "RareFind — Hidden Cafes, Courtyards & Architectural Gems" },
       {
         property: "og:description",
         content:
-          "Filter Kyoto's quietest machiya cafes, courtyards and architectural gems by vibe, then build a walkable day plan.",
+          "Type any city in the world and get its quietest hidden rooms and courtyards, mapped and ready to walk.",
       },
     ],
   }),
@@ -52,9 +63,38 @@ function Explorer() {
   const [planOpen, setPlanOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [sheet, setSheet] = useState(45);
-  const itinerary = useItinerary();
+  const [cityInput, setCityInput] = useState(search.city ?? DEFAULT_CITY);
 
   useEffect(() => setMounted(true), []);
+  useEffect(() => setCityInput(search.city ?? DEFAULT_CITY), [search.city]);
+
+  const city = search.city ?? DEFAULT_CITY;
+  const isDefaultCity = citySlug(city) === citySlug(DEFAULT_CITY);
+
+  const fetchCity = useServerFn(getCitySpots);
+
+  const cityQuery = useQuery({
+    queryKey: ["city-spots", citySlug(city)],
+    enabled: mounted && !isDefaultCity,
+    staleTime: Infinity,
+    retry: false,
+    queryFn: async () => {
+      const cached = readCityCache(city);
+      const cachedCenter = readCityCenter(city);
+      if (cached && cachedCenter) return { spots: cached, center: cachedCenter };
+      const result = await fetchCity({ data: { city } });
+      const spots = resultToSpots(result);
+      writeCityCache(city, spots, result.center);
+      return { spots, center: result.center };
+    },
+  });
+
+  const spotPool: Spot[] = isDefaultCity ? SPOTS : (cityQuery.data?.spots ?? []);
+  const center: [number, number] = isDefaultCity
+    ? KYOTO_CENTER
+    : (cityQuery.data?.center ?? KYOTO_CENTER);
+
+  const itinerary = useItinerary(spotPool);
 
   const filters: Filters = useMemo(() => {
     const f = { ...EMPTY_FILTERS };
@@ -91,22 +131,22 @@ function Explorer() {
 
   const results = useMemo(
     () =>
-      SPOTS.filter((s) => {
+      spotPool.filter((s) => {
         for (const key of Object.keys(FACETS) as FacetKey[]) {
           const selected = filters[key];
           if (selected.length && !selected.includes(s[key])) return false;
         }
         if (!query) return true;
-        return [s.name, s.kanji, s.district, s.type, s.summary, s.vignette.join(" ")]
+        return [s.name, s.localName, s.district, s.type, s.summary, s.vignette.join(" ")]
           .join(" ")
           .toLowerCase()
           .includes(query);
       }),
-    [filters, query],
+    [spotPool, filters, query],
   );
 
   const selectedId = search.spot ?? null;
-  const selectedSpot = selectedId ? (spotById(selectedId) ?? null) : null;
+  const selectedSpot = selectedId ? (spotPool.find((s) => s.id === selectedId) ?? null) : null;
 
   // marker click -> scroll the matching card into view
   useEffect(() => {
@@ -121,8 +161,15 @@ function Explorer() {
     const added = itinerary.toggle(id);
     toast[added ? "success" : "message"](
       added ? "Added to your day plan" : "Removed from your day plan",
-      { description: spotById(id)?.name },
+      { description: spotPool.find((s) => s.id === id)?.name },
     );
+  };
+
+  const submitCity = (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = cityInput.trim();
+    if (!value) return;
+    setSearch({ city: value, spot: "", q: "" });
   };
 
   const startDrag = (e: React.PointerEvent) => {
@@ -139,8 +186,28 @@ function Explorer() {
     window.addEventListener("pointerup", up);
   };
 
+  const loading = cityQuery.isFetching && !cityQuery.data;
+  const failure = cityQuery.isError ? (cityQuery.error as Error).message : null;
+
   const panel = (
     <>
+      <form onSubmit={submitCity} className="flex items-center gap-2 border-b border-border px-4 py-3">
+        <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" />
+        <input
+          value={cityInput}
+          onChange={(e) => setCityInput(e.target.value)}
+          placeholder="Which city? e.g. Lisbon, Portugal"
+          aria-label="City"
+          className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+        />
+        <button
+          type="submit"
+          className="shrink-0 border border-border px-2 py-1 text-[10px] uppercase tracking-[0.14em] hover:border-foreground"
+        >
+          Find
+        </button>
+      </form>
+
       <div className="flex items-center gap-2 border-b border-border px-4 py-3">
         <Search className="h-3.5 w-3.5 text-muted-foreground" />
         <input
@@ -150,9 +217,27 @@ function Explorer() {
           className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground"
         />
       </div>
+
       <FilterPanel filters={filters} onToggle={toggleFacet} onClear={clearFilters} count={results.length} />
+
       <div className="flex-1 overflow-y-auto">
-        {results.length === 0 && (
+        {loading && (
+          <p className="flex items-center justify-center gap-2 px-4 py-10 text-center text-xs text-muted-foreground">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" /> Reading the streets of {city}…
+          </p>
+        )}
+        {failure && (
+          <div className="px-4 py-10 text-center text-xs text-muted-foreground">
+            <p>{failure}</p>
+            <button
+              onClick={() => cityQuery.refetch()}
+              className="mt-3 border border-border px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] hover:border-foreground"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+        {!loading && !failure && results.length === 0 && (
           <p className="px-4 py-10 text-center text-xs text-muted-foreground">
             No spots match those vibes. Loosen a filter.
           </p>
@@ -186,6 +271,7 @@ function Explorer() {
             <Suspense fallback={null}>
               <MapView
                 spots={results}
+                center={center}
                 selectedId={selectedId}
                 hoveredId={hoveredId}
                 onSelect={(id) => setSearch({ spot: id })}
