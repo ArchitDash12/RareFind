@@ -80,9 +80,10 @@ Use only the allowed values for the vibe tags.`;
 
     try {
       const result = streamText({
-        model: gateway("google/gemini-3.8-flash"),
+        model: gateway.responses("openai/gpt-5.4-mini"),
         prompt,
         output: Output.object({ schema: z.object({ places: z.array(placeSchema) }) }),
+        providerOptions: { openai: { store: false } },
       });
       const output = await result.output;
       const places = (output.places ?? []).filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
