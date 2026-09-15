@@ -59,8 +59,8 @@ export const getCitySpots = createServerFn({ method: "POST" })
     const center = await geocode(data.city);
     if (!center) throw new Error(`We couldn't find a city called "${data.city}".`);
 
-    const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
-    const gateway = createLovableAiGatewayProvider(key);
+    const { createLovableResponsesProvider } = await import("@/lib/ai-gateway.server");
+    const gateway = createLovableResponsesProvider(key);
 
     const prompt = `You are the editor of RareFind, a guide to hidden architectural gems, atmospheric cafes and quiet courtyards.
 
