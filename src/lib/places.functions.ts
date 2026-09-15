@@ -91,7 +91,7 @@ Use only the allowed values for the vibe tags.`;
       return { city: data.city, center, places };
     } catch (error) {
       if (NoObjectGeneratedError.isInstance(error)) {
-        console.error("RareFind generation failed", error.cause, String(error.text).slice(0, 2000));
+        console.error("RareFind generation failed", error.cause);
         throw new Error("The recommendations came back malformed. Please try again.");
       }
       throw error;
