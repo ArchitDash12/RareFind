@@ -48,7 +48,10 @@ export function useItinerary() {
       const j = i + dir;
       if (i < 0 || j < 0 || j >= ids.length) return;
       const next = [...ids];
-      [next[i], next[j]] = [next[j], next[i]];
+      const a = next[i]!;
+      const b = next[j]!;
+      next[i] = b;
+      next[j] = a;
       persist(next);
     },
     [ids, persist],
