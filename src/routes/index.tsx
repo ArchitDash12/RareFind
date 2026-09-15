@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
 
 const MapView = lazy(() => import("@/components/explorer/MapView"));
 
-type Search = Partial<Record<FacetKey, string>> & { q?: string; spot?: string };
+type ExplorerSearch = Partial<Record<FacetKey, string>> & { q?: string; spot?: string };
 
 export const Route = createFileRoute("/")({
-  validateSearch: (search: Record<string, unknown>): Search => {
-    const out: Search = {};
+  validateSearch: (search: Record<string, unknown>): ExplorerSearch => {
+    const out: ExplorerSearch = {};
     for (const key of Object.keys(FACETS) as FacetKey[]) {
       const v = search[key];
       if (typeof v === "string" && v) out[key] = v;
@@ -66,10 +66,10 @@ function Explorer() {
   }, [search]);
 
   const setSearch = useCallback(
-    (patch: Partial<Search>) => {
+    (patch: Partial<ExplorerSearch>) => {
       navigate({
-        search: (prev: Search) => {
-          const next: Search = { ...prev, ...patch };
+        search: (prev: ExplorerSearch) => {
+          const next: ExplorerSearch = { ...prev, ...patch };
           for (const k of Object.keys(next) as (keyof Search)[]) if (!next[k]) delete next[k];
           return next;
         },
@@ -82,7 +82,7 @@ function Explorer() {
   const toggleFacet = (key: FacetKey, value: string) => {
     const current = filters[key];
     const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
-    setSearch({ [key]: next.join(",") } as Partial<Search>);
+    setSearch({ [key]: next.join(",") } as Partial<ExplorerSearch>);
   };
 
   const clearFilters = () =>
