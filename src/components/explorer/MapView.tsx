@@ -40,7 +40,7 @@ export default function MapView({ spots, selectedId, hoveredId, onSelect, onHove
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const maplibregl = (await import("maplibre-gl")).default;
+      const maplibregl = await import("maplibre-gl");
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = new maplibregl.Map({
         container: containerRef.current,
@@ -67,7 +67,7 @@ export default function MapView({ spots, selectedId, hoveredId, onSelect, onHove
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const maplibregl = (await import("maplibre-gl")).default;
+      const maplibregl = await import("maplibre-gl");
       const map = mapRef.current;
       if (cancelled || !map) return;
       const wanted = new Set(spots.map((s) => s.id));
