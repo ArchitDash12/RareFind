@@ -70,7 +70,7 @@ function Explorer() {
       navigate({
         search: (prev: ExplorerSearch) => {
           const next: ExplorerSearch = { ...prev, ...patch };
-          for (const k of Object.keys(next) as (keyof Search)[]) if (!next[k]) delete next[k];
+          for (const k of Object.keys(next) as (keyof ExplorerSearch)[]) if (!next[k]) delete next[k];
           return next;
         },
         replace: true,
