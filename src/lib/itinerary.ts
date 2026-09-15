@@ -75,7 +75,8 @@ function haversineKm(a: [number, number], b: [number, number]) {
 
 export function routeSummary(spots: Spot[]) {
   let km = 0;
-  for (let i = 1; i < spots.length; i++) km += haversineKm(spots[i - 1].coords, spots[i].coords) * 1.3;
+  for (let i = 1; i < spots.length; i++)
+    km += haversineKm(spots[i - 1]!.coords, spots[i]!.coords) * 1.3;
   const dwell = spots.reduce((t, s) => t + s.minutes, 0);
   const walkMinutes = Math.round((km / 4.8) * 60);
   return { km, walkMinutes, dwell, total: dwell + walkMinutes };
