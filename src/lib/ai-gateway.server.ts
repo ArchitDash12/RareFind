@@ -1,3 +1,4 @@
+import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
 const LOVABLE_AIG_RUN_ID_HEADER = "X-Lovable-AIG-Run-ID";
@@ -61,5 +62,18 @@ export function createLovableAiGatewayProvider(
   return Object.assign(provider, {
     getRunId: runIdFetch.getRunId,
     waitForRunId: runIdFetch.waitForRunId,
+  });
+}
+
+export function createLovableResponsesProvider(lovableApiKey: string, initialRunId?: string) {
+  const runIdFetch = createLovableAiGatewayRunIdFetch(initialRunId);
+  return createOpenAI({
+    baseURL: "https://ai.gateway.lovable.dev/v1",
+    apiKey: lovableApiKey,
+    headers: {
+      "Lovable-API-Key": lovableApiKey,
+      "X-Lovable-AIG-SDK": "vercel-ai-sdk",
+    },
+    fetch: runIdFetch.fetch as typeof fetch,
   });
 }
